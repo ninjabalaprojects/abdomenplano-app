@@ -4,5 +4,5 @@ export const APP_CONFIG = {
   productName: 'Protocolo Abdomen Plano',
   guaranteeDays: 60,
   totalPhases: 4,
-  supportEmail: 'soporte@abdomenplano.com',
+  supportEmail: 'blackbeltmktsuporte@gmail.com',
 }
