@@ -24,8 +24,16 @@ export default function Onboarding() {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         {step === 1 && (
           <div className="text-center max-w-sm w-full">
-            <div className="w-24 h-24 rounded-full bg-terracota/10 mx-auto mb-6 flex items-center justify-center">
-              <span className="text-5xl">🌸</span>
+            <div className="w-28 h-28 mx-auto mb-6 flex items-center justify-center">
+              <img
+                src="/logo/logo.jpg"
+                alt="Protocolo Abdomen Plano"
+                className="w-full h-full object-contain"
+                onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex' }}
+              />
+              <div className="w-24 h-24 rounded-full bg-terracota/10 items-center justify-center hidden">
+                <span className="text-5xl">🌸</span>
+              </div>
             </div>
             <h1 className="font-serif text-3xl text-warm-brown font-bold leading-tight mb-3">
               ¡Bienvenida al<br />Protocolo Abdomen Plano!

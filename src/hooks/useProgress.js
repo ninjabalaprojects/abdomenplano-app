@@ -3,26 +3,23 @@ import { ACHIEVEMENTS } from '../data/achievements'
 
 const today = () => new Date().toISOString().split('T')[0]
 
-export function useProgress() {
-  const [userProfile, setUserProfile] = useLocalStorage('user_profile', null)
-  // unlockedPhases: permanent — only used to unlock next phase
-  const [unlockedPhases, setUnlockedPhases] = useLocalStorage('completed_phases', [])
-  // phaseDailyLog: { 'YYYY-MM-DD': [1, 2, 3, 4] } — resets each day
-  const [phaseDailyLog, setPhaseDailyLog] = useLocalStorage('phase_daily_log', {})
-  const [dailyCheckins, setDailyCheckins] = useLocalStorage('daily_checkins', {})
-  const [photos, setPhotos] = useLocalStorage('progress_photos', [])
-  const [phaseChecklists, setPhaseChecklists] = useLocalStorage('phase_checklists', {})
-  const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage('achievements', [])
+export function useProgress(userId) {
+  const p = userId ? `u_${userId}_` : 'u_default_'
 
-  // completedPhases exposed for backwards compat (achievements etc)
+  const [userProfile, setUserProfile] = useLocalStorage(`${p}user_profile`, null)
+  const [unlockedPhases, setUnlockedPhases] = useLocalStorage(`${p}completed_phases`, [])
+  const [phaseDailyLog, setPhaseDailyLog] = useLocalStorage(`${p}phase_daily_log`, {})
+  const [dailyCheckins, setDailyCheckins] = useLocalStorage(`${p}daily_checkins`, {})
+  const [photos, setPhotos] = useLocalStorage(`${p}progress_photos`, [])
+  const [phaseChecklists, setPhaseChecklists] = useLocalStorage(`${p}phase_checklists`, {})
+  const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage(`${p}achievements`, [])
+
   const completedPhases = unlockedPhases
 
   const markPhaseComplete = (phaseId) => {
-    // unlock permanently (for next-phase access)
     if (!unlockedPhases.includes(phaseId)) {
       setUnlockedPhases([...unlockedPhases, phaseId])
     }
-    // mark as done today
     const todayKey = today()
     setPhaseDailyLog(prev => {
       const todayPhases = prev[todayKey] || []
@@ -36,15 +33,9 @@ export function useProgress() {
     return unlockedPhases.includes(phaseId - 1)
   }
 
-  // permanent unlock (for showing lock/unlock UI only)
   const isPhaseEverCompleted = (phaseId) => unlockedPhases.includes(phaseId)
-
-  // daily — resets each day
   const isPhaseCompleteToday = (phaseId) => (phaseDailyLog[today()] || []).includes(phaseId)
-
   const getPhasesCompletedToday = () => phaseDailyLog[today()] || []
-
-  // Legacy alias used in achievements/dashboard
   const isPhaseComplete = isPhaseCompleteToday
 
   const checkInToday = () => {
@@ -59,10 +50,8 @@ export function useProgress() {
     const d = new Date()
     while (true) {
       const key = d.toISOString().split('T')[0]
-      if (dailyCheckins[key]) {
-        streak++
-        d.setDate(d.getDate() - 1)
-      } else break
+      if (dailyCheckins[key]) { streak++; d.setDate(d.getDate() - 1) }
+      else break
     }
     return streak
   }

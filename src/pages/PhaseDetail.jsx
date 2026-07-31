@@ -3,8 +3,6 @@ import { useState } from 'react'
 import { PHASES } from '../data/phases'
 import { useProgressContext as useProgress } from '../context/ProgressContext'
 import VideoPlayer from '../components/VideoPlayer'
-import offersConfig from '../config/offers.json'
-import OfferCard from '../components/OfferCard'
 import Navigation from '../components/Navigation'
 
 export default function PhaseDetail() {
@@ -22,8 +20,7 @@ export default function PhaseDetail() {
   const todayChecked = getTodayChecklist(phase.id)
   const allDone = todayChecked.length === phase.checklistItems.length
   const nextPhase = PHASES.find(p => p.id === phase.id + 1)
-  const completionOffer = offersConfig.offers.find(o => o.active)
-  const todayPhasesCount = getPhasesCompletedToday().length
+const todayPhasesCount = getPhasesCompletedToday().length
 
   const handleComplete = () => {
     markPhaseComplete(phase.id)
@@ -168,8 +165,8 @@ export default function PhaseDetail() {
 
       {/* Completion modal */}
       {showCompleteModal && (
-        <div className="fixed inset-0 bg-warm-brown/40 flex items-center justify-center z-50 p-4">
-          <div className="bg-cream rounded-3xl p-6 w-full space-y-4">
+        <div className="fixed inset-0 bg-warm-brown/50 flex items-end z-50">
+          <div className="bg-cream rounded-t-3xl w-full max-h-[90vh] overflow-y-auto p-5 space-y-4">
             {todayPhasesCount >= 4 ? (
               /* All 4 phases done today */
               <div className="text-center">
@@ -192,12 +189,6 @@ export default function PhaseDetail() {
                     ? `La Fase ${phase.id + 1} ya está desbloqueada. ¡Continúa!`
                     : `${todayPhasesCount}/4 fases de hoy completadas.`}
                 </p>
-              </div>
-            )}
-            {completionOffer && todayPhasesCount >= 4 && (
-              <div>
-                <p className="text-xs text-light-brown text-center mb-2">Lleva tu progreso más lejos:</p>
-                <OfferCard offer={completionOffer} />
               </div>
             )}
             <div className="space-y-2">

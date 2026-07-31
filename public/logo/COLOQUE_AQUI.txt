@@ -1,0 +1,12 @@
+Coloque aqui os arquivos de logo do app:
+
+  favicon.png   → ícone do browser (32x32 px ou 64x64 px, formato .png)
+  logo-192.png  → ícone para iOS "Adicionar à tela inicial" (192x192 px)
+  logo.png      → logo completa usada dentro do app (qualquer tamanho)
+
+Como usar no app:
+  <img src="/logo/logo.png" />
+  ou em CSS: background-image: url('/logo/logo.png')
+
+Nota: o favicon.svg atual na raiz do /public pode ser deletado
+depois que você colocar o favicon.png aqui.

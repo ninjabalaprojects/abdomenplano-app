@@ -5,8 +5,6 @@ import { useProgressContext as useProgress } from '../context/ProgressContext'
 import { PHASES } from '../data/phases'
 import { APP_CONFIG } from '../config/app.config'
 import { DAILY_MESSAGES, MILESTONE_MESSAGES } from '../data/messages'
-import offersConfig from '../config/offers.json'
-import OfferCard from '../components/OfferCard'
 import Navigation from '../components/Navigation'
 import PhaseCard from '../components/PhaseCard'
 import { BONUSES } from '../data/bonuses'
@@ -42,9 +40,7 @@ export default function Dashboard() {
   const daysSinceStart = getDaysSinceStart()
   const totalCheckins = getTotalCheckins()
   const dailyMsg = DAILY_MESSAGES[daysSinceStart % DAILY_MESSAGES.length]
-  const firstOffer = offersConfig.offers.find(o => o.active)
-
-  const handleCheckIn = () => {
+const handleCheckIn = () => {
     checkInToday()
     const newAchievements = checkNewAchievements()
     if (newAchievements.length > 0) setToastAchievement(newAchievements[0])
@@ -67,11 +63,21 @@ export default function Dashboard() {
       {/* Top greeting */}
       <div className="bg-gradient-to-b from-beige to-cream px-5 pt-10 pb-5">
         <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-          <p className="text-light-brown text-sm">Hola, 💛</p>
-          <h1 className="font-serif text-3xl text-warm-brown font-bold leading-tight">
-            {userProfile?.name || 'Bienvenida'}
-          </h1>
-          <p className="text-light-brown text-sm mt-0.5">Día {daysSinceStart + 1} · {APP_CONFIG.productName}</p>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-light-brown text-sm">Hola, 💛</p>
+              <h1 className="font-serif text-3xl text-warm-brown font-bold leading-tight">
+                {userProfile?.name || 'Bienvenida'}
+              </h1>
+              <p className="text-light-brown text-sm mt-0.5">Día {daysSinceStart + 1} · {APP_CONFIG.productName}</p>
+            </div>
+            <img
+              src="/logo/logo.jpg"
+              alt="Logo"
+              className="w-14 h-14 object-contain rounded-xl flex-shrink-0"
+              onError={e => { e.target.style.display = 'none' }}
+            />
+          </div>
         </motion.div>
 
         {/* Daily progress bar */}
@@ -193,29 +199,6 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* WhatsApp */}
-        <motion.a
-          href={APP_CONFIG.whatsappGroupUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileTap={{ scale: 0.97 }}
-          className="flex items-center gap-3 bg-gradient-to-r from-[#25D366]/15 to-[#128C7E]/10 rounded-2xl p-4 border border-[#25D366]/20"
-        >
-          <span className="text-3xl">💬</span>
-          <div className="flex-1">
-            <p className="font-medium text-warm-brown text-sm">Desafío Ativa 7D</p>
-            <p className="text-light-brown text-xs">Carolina en vivo · Comunidad de apoyo</p>
-          </div>
-          <span className="bg-[#25D366] text-white px-3 py-1.5 rounded-xl text-xs font-medium">Entrar</span>
-        </motion.a>
-
-        {/* Upsell */}
-        {firstOffer && (
-          <div>
-            <p className="text-xs text-light-brown/60 mb-2 text-center">Oferta exclusiva para miembros</p>
-            <OfferCard offer={firstOffer} />
-          </div>
-        )}
       </div>
 
       <Navigation />
