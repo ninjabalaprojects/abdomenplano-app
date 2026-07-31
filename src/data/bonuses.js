@@ -1,0 +1,55 @@
+export const BONUSES = [
+  {
+    id: 'bonus-1',
+    name: 'Desafío Queima 21',
+    subtitle: '21 días de entrenamiento inteligente',
+    description: 'Rutinas diarias de 15 minutos para piernas, caderas y cuerpo general — diseñadas específicamente para no agravar la diástasis mientras tonificas el resto del cuerpo.',
+    icon: '🔥',
+    color: 'terracota',
+    content: [
+      { week: 1, name: 'Semana Activación', days: ['Piernas suaves', 'Caderas y glúteos', 'Movilidad', 'Brazos y hombros', 'Circuito suave', 'Descanso activo', 'Revisión + stretching'] },
+      { week: 2, name: 'Semana Intensidad', days: ['Sentadillas guiadas', 'Puente de glúteos', 'Lunges sin impacto', 'Brazos con banda', 'Circuito completo', 'Yoga restaurativo', 'Revisión + medición'] },
+      { week: 3, name: 'Semana Resultados', days: ['Full lower body', 'Glúteos avanzado', 'Movilidad profunda', 'Upper body completo', 'Circuito final', 'Stretching profundo', 'Celebración + fotos'] },
+    ],
+  },
+  {
+    id: 'bonus-2',
+    name: 'Super Flex',
+    subtitle: 'Postura, movilidad y alivio del dolor',
+    description: 'Programa de 4 semanas para corregir la postura postparto, aliviar el dolor lumbar y recuperar la movilidad que el embarazo limitó.',
+    icon: '🧘',
+    color: 'sage',
+    content: [
+      { module: 1, name: 'Liberación de tensión', description: 'Técnicas de foam rolling y estiramientos para la cadena posterior tensa por el embarazo.' },
+      { module: 2, name: 'Corrección postural', description: 'Ejercicios específicos para revertir la hiperlordosis lumbar y la protrusión de hombros.' },
+      { module: 3, name: 'Movilidad de caderas', description: 'Rutinas para recuperar el rango de movimiento de cadera perdido durante el embarazo.' },
+      { module: 4, name: 'Columna sin dolor', description: 'Protocolo de activación para estabilizar y descomprimir la columna lumbar.' },
+    ],
+  },
+  {
+    id: 'bonus-3',
+    name: 'Guía Alimentar Anti-inflamación',
+    subtitle: '7 días de alimentación que potencia tu recuperación',
+    description: 'No es una dieta. Es una guía de alimentación anti-inflamatoria que potencia el cierre de la diástasis desde adentro — sin restricciones extremas, sin contar calorías.',
+    icon: '🥗',
+    color: 'dusty-rose',
+    isGuide: true,
+    content: {
+      intro: 'La inflamación crónica es uno de los principales obstáculos para el cierre de la diástasis. Ciertos alimentos la aumentan, otros la reducen. En 7 días, vas a notar la diferencia.',
+      principles: [
+        { name: 'No es una dieta', description: 'No hay alimentos prohibidos. Hay alimentos que priorizamos y alimentos que reducimos durante estos 7 días.' },
+        { name: 'Anti-inflamatorio natural', description: 'Priorizamos alimentos ricos en omega-3, antioxidantes y colágeno natural — los bloques de construcción del tejido conectivo.' },
+        { name: 'Simple y accesible', description: 'Todos los ingredientes se consiguen en cualquier mercado de LATAM. Sin superfoods exóticos ni suplementos costosos.' },
+      ],
+      days: [
+        { day: 1, breakfast: 'Avena con berries y semillas de chía', lunch: 'Ensalada de pollo con aguacate y aceite de oliva', dinner: 'Salmón al horno con verduras asadas', snack: 'Nueces y fruta' },
+        { day: 2, breakfast: 'Smoothie verde (espinaca, manzana, jengibre)', lunch: 'Sopa de lentejas con cúrcuma', dinner: 'Pollo a las hierbas con camote', snack: 'Yogur natural con miel' },
+        { day: 3, breakfast: 'Huevos revueltos con espinaca y tomate', lunch: 'Bowl de arroz integral con vegetales salteados', dinner: 'Trucha con ensalada mediterránea', snack: 'Manzana con mantequilla de almendras' },
+        { day: 4, breakfast: 'Tostadas de aguacate con huevo pochado', lunch: 'Ensalada de garbanzo con vegetales frescos', dinner: 'Pollo en salsa de cúrcuma con quinoa', snack: 'Zanahorias con hummus' },
+        { day: 5, breakfast: 'Parfait de yogur griego con granola y frutas', lunch: 'Wrap de pavo con vegetales', dinner: 'Pescado blanco al vapor con brócoli', snack: 'Frutas de temporada' },
+        { day: 6, breakfast: 'Panqueques de avena y banana', lunch: 'Ensalada tibia de lentejas', dinner: 'Estofado de pollo con verduras', snack: 'Nueces mixtas' },
+        { day: 7, breakfast: 'Bowl de frutas con semillas y yogur', lunch: 'Ensalada de quinoa completa', dinner: 'Cena libre anti-inflamatoria (guía incluida)', snack: 'Chocolate negro 70% mínimo' },
+      ],
+    },
+  },
+]

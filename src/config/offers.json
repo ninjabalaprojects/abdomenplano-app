@@ -1,0 +1,24 @@
+{
+  "offers": [
+    {
+      "id": "advanced-protocol",
+      "name": "Protocolo Avanzado 90 Días",
+      "description": "Lleva tu recuperación al siguiente nivel con el programa completo de 90 días.",
+      "price": "$27.00",
+      "checkoutUrl": "https://checkout.example.com/advanced",
+      "imageUrl": "",
+      "badge": "Más Vendido",
+      "active": true
+    },
+    {
+      "id": "nutrition-guide",
+      "name": "Plan Nutricional Completo",
+      "description": "Alimentación anti-inflamatoria personalizada para acelerar el cierre de la diástasis.",
+      "price": "$17.00",
+      "checkoutUrl": "https://checkout.example.com/nutrition",
+      "imageUrl": "",
+      "badge": "Nuevo",
+      "active": true
+    }
+  ]
+}
