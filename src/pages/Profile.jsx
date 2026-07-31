@@ -17,7 +17,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-24">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       <Header title="Tu Perfil" subtitle="Información y configuración" />
       <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
 

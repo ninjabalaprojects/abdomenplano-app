@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 export default function Header({ title, subtitle, showBack = false, action }) {
   const navigate = useNavigate()
   return (
-    <div className="bg-cream pt-safe-top pb-4 px-4 border-b border-beige sticky top-0 z-40">
+    <div className="bg-cream pt-safe pb-4 px-4 border-b border-beige sticky top-0 z-40">
       <div className="max-w-lg mx-auto">
         <div className="flex items-center gap-3">
           {showBack && (

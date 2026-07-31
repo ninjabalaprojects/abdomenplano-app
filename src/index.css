@@ -7,8 +7,24 @@ body {
   background-color: #FAF7F2;
   color: #3D2C2C;
   font-family: 'Inter', system-ui, sans-serif;
+  /* Prevent iOS bounce scroll */
+  overscroll-behavior: none;
 }
 
 .font-serif {
   font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Safe area utilities for notched devices (iPhone X+) */
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .pb-nav-safe {
+    /* Nav height (64px) + bottom safe area */
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
 }

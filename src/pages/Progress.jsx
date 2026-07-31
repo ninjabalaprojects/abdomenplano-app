@@ -49,7 +49,7 @@ export default function Progress() {
 
   return (
     <PageTransition>
-      <div className="min-h-screen bg-cream pb-24">
+      <div className="min-h-screen bg-cream pb-nav-safe">
         <Header title="Tu Progreso" subtitle={`Día ${Math.min(daysSinceStart + 1, totalDays)} de ${totalDays}`} />
 
         <div className="max-w-lg mx-auto px-4 py-4 space-y-5">

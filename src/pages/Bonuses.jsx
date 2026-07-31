@@ -6,7 +6,7 @@ import Navigation from '../components/Navigation'
 export default function Bonuses() {
   const navigate = useNavigate()
   return (
-    <div className="min-h-screen bg-cream pb-24">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       <Header title="Tus Bonos" subtitle="3 programas complementarios incluidos" />
       <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
         {BONUSES.map((bonus, i) => (

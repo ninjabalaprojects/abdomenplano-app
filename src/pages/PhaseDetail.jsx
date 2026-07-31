@@ -43,7 +43,7 @@ const todayPhasesCount = getPhasesCompletedToday().length
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-28">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       {/* Hero header with background image */}
       <div className="relative h-56 overflow-hidden bg-beige">
         {phase.bannerImage && (

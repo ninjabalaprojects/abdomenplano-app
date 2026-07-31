@@ -6,7 +6,7 @@ import Navigation from '../components/Navigation'
 
 export default function Phases() {
   return (
-    <div className="min-h-screen bg-cream pb-24">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       <Header title="Las 4 Fases" subtitle="Tu protocolo completo paso a paso" />
       <div className="max-w-lg mx-auto px-4 py-4 space-y-3">
         <div className="bg-beige rounded-2xl p-4 text-sm text-light-brown">

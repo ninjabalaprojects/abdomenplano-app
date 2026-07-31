@@ -10,7 +10,7 @@ export default function BonusDetail() {
   if (!bonus) return <div className="p-8 text-center">Bono no encontrado</div>
 
   return (
-    <div className="min-h-screen bg-cream pb-24">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       {/* Hero with image */}
       <div className="relative h-56 overflow-hidden bg-beige">
         {bonus.bannerImage && (

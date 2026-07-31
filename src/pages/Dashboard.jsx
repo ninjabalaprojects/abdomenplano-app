@@ -56,7 +56,7 @@ const handleCheckIn = () => {
   }
 
   return (
-    <div className="min-h-screen bg-cream pb-24">
+    <div className="min-h-screen bg-cream pb-nav-safe">
       <AchievementToast achievement={toastAchievement} onDismiss={() => setToastAchievement(null)} />
       <MilestoneModal milestone={milestone} onClose={() => setMilestone(null)} />
 

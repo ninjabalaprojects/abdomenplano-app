@@ -14,7 +14,7 @@ export default function Navigation() {
   const navigate = useNavigate()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-pale-rose z-50">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-pale-rose z-50 pb-safe">
       <div className="flex justify-around items-center py-2 px-2 max-w-lg mx-auto">
         {NAV_ITEMS.map(item => {
           const isActive = location.pathname.startsWith(item.path)
