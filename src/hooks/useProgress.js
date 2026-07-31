@@ -3,16 +3,14 @@ import { ACHIEVEMENTS } from '../data/achievements'
 
 const today = () => new Date().toISOString().split('T')[0]
 
-export function useProgress(userId) {
-  const p = userId ? `u_${userId}_` : 'u_default_'
-
-  const [userProfile, setUserProfile] = useLocalStorage(`${p}user_profile`, null)
-  const [unlockedPhases, setUnlockedPhases] = useLocalStorage(`${p}completed_phases`, [])
-  const [phaseDailyLog, setPhaseDailyLog] = useLocalStorage(`${p}phase_daily_log`, {})
-  const [dailyCheckins, setDailyCheckins] = useLocalStorage(`${p}daily_checkins`, {})
-  const [photos, setPhotos] = useLocalStorage(`${p}progress_photos`, [])
-  const [phaseChecklists, setPhaseChecklists] = useLocalStorage(`${p}phase_checklists`, {})
-  const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage(`${p}achievements`, [])
+export function useProgress() {
+  const [userProfile, setUserProfile] = useLocalStorage('user_profile', null)
+  const [unlockedPhases, setUnlockedPhases] = useLocalStorage('completed_phases', [])
+  const [phaseDailyLog, setPhaseDailyLog] = useLocalStorage('phase_daily_log', {})
+  const [dailyCheckins, setDailyCheckins] = useLocalStorage('daily_checkins', {})
+  const [photos, setPhotos] = useLocalStorage('progress_photos', [])
+  const [phaseChecklists, setPhaseChecklists] = useLocalStorage('phase_checklists', {})
+  const [unlockedAchievements, setUnlockedAchievements] = useLocalStorage('achievements', [])
 
   const completedPhases = unlockedPhases
 
@@ -39,8 +37,7 @@ export function useProgress(userId) {
   const isPhaseComplete = isPhaseCompleteToday
 
   const checkInToday = () => {
-    const todayStr = today()
-    setDailyCheckins(prev => ({ ...prev, [todayStr]: true }))
+    setDailyCheckins(prev => ({ ...prev, [today()]: true }))
   }
 
   const hasCheckedInToday = () => !!dailyCheckins[today()]

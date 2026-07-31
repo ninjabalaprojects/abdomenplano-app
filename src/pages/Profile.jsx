@@ -1,16 +1,18 @@
-import { useProgressContext as useProgress, useUserContext } from '../context/ProgressContext'
+import { useProgressContext as useProgress } from '../context/ProgressContext'
 import { APP_CONFIG } from '../config/app.config'
 import { PHASES } from '../data/phases'
 import Header from '../components/Header'
 import Navigation from '../components/Navigation'
+import { useNavigate } from 'react-router-dom'
 
 export default function Profile() {
   const { userProfile, completedPhases, getTotalCheckins, getDaysSinceStart, photos } = useProgress()
-  const { usersList, currentUserId, logOut, deleteUser } = useUserContext()
+  const navigate = useNavigate()
 
   const handleReset = () => {
-    if (window.confirm('¿Segura que quieres reiniciar tu progreso? Esta acción no se puede deshacer.')) {
-      deleteUser(currentUserId)
+    if (window.confirm('¿Segura que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
+      localStorage.clear()
+      navigate('/')
     }
   }
 
@@ -43,35 +45,6 @@ export default function Profile() {
           ))}
         </div>
 
-        {/* Switch / add profiles */}
-        <div className="bg-white rounded-2xl p-4 border border-beige shadow-sm">
-          <h3 className="font-serif text-warm-brown font-semibold mb-3">Perfiles guardados</h3>
-          <div className="space-y-2 mb-3">
-            {usersList.map(user => (
-              <div
-                key={user.id}
-                className={`flex items-center gap-3 p-3 rounded-xl ${user.id === currentUserId ? 'bg-terracota/10 border border-terracota/20' : 'bg-beige'}`}
-              >
-                <span className="text-xl">🌸</span>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-warm-brown">{user.name}</p>
-                  <p className="text-xs text-light-brown">Desde {user.startDate}</p>
-                </div>
-                {user.id === currentUserId
-                  ? <span className="text-xs text-terracota font-medium">Activa</span>
-                  : <button onClick={() => logOut()} className="text-xs text-light-brown underline">Cambiar</button>
-                }
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={logOut}
-            className="w-full py-3 rounded-xl border-2 border-dashed border-terracota/30 text-terracota text-sm font-medium"
-          >
-            + Agregar / cambiar perfil
-          </button>
-        </div>
-
         {/* Guarantee */}
         <div className="bg-beige rounded-2xl p-4">
           <h3 className="font-serif text-warm-brown font-semibold mb-3">🛡️ Central de Garantías</h3>
@@ -89,9 +62,9 @@ export default function Profile() {
 
         {/* Reset */}
         <div className="bg-pale-rose/30 rounded-2xl p-4 border border-pale-rose">
-          <h3 className="font-medium text-warm-brown mb-1">Eliminar perfil</h3>
-          <p className="text-light-brown text-xs mb-3">Borra este perfil y todo su progreso. No se puede deshacer.</p>
-          <button onClick={handleReset} className="text-sm text-light-brown underline">Eliminar mi perfil</button>
+          <h3 className="font-medium text-warm-brown mb-1">Reiniciar app</h3>
+          <p className="text-light-brown text-xs mb-3">Borra todo el progreso local. Útil solo si vas a empezar desde cero.</p>
+          <button onClick={handleReset} className="text-sm text-light-brown underline">Reiniciar mi progreso</button>
         </div>
 
         <p className="text-center text-light-brown/40 text-xs">{APP_CONFIG.productName} v1.0 • {APP_CONFIG.instructorName}</p>
