@@ -47,15 +47,32 @@ export default function PhaseDetail() {
 
   return (
     <div className="min-h-screen bg-cream pb-28">
-      {/* Back button */}
-      <div className="sticky top-0 bg-cream/90 backdrop-blur-sm z-40 px-4 py-3 border-b border-beige">
-        <div className="max-w-lg mx-auto flex items-center gap-3">
-          <button onClick={() => navigate('/phases')} className="text-terracota text-2xl">‹</button>
-          <div>
-            <p className="text-xs text-light-brown">Fase {phase.id}</p>
-            <h1 className="font-serif text-lg text-warm-brown font-semibold leading-tight">{phase.name}</h1>
-          </div>
-          {completeToday && <span className="ml-auto text-xs bg-sage text-white px-2 py-1 rounded-full">✅ Hecha hoy</span>}
+      {/* Hero header with background image */}
+      <div className="relative h-56 overflow-hidden bg-beige">
+        {phase.bannerImage && (
+          <img
+            src={phase.bannerImage}
+            alt={phase.name}
+            className="absolute inset-0 w-full h-full object-cover"
+            onError={e => { e.target.style.display = 'none' }}
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-warm-brown/80 via-warm-brown/30 to-warm-brown/20" />
+        {/* Back button */}
+        <button
+          onClick={() => navigate('/phases')}
+          className="absolute top-4 left-4 z-10 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-xl"
+        >
+          ‹
+        </button>
+        {completeToday && (
+          <span className="absolute top-4 right-4 z-10 text-xs bg-sage text-white px-2 py-1 rounded-full">✅ Hecha hoy</span>
+        )}
+        {/* Title at bottom of hero */}
+        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+          <p className="text-white/70 text-xs">Fase {phase.id}</p>
+          <h1 className="font-serif text-2xl text-white font-bold leading-tight">{phase.name}</h1>
+          <p className="text-white/60 text-sm mt-0.5">{phase.subtitle}</p>
         </div>
       </div>
 
@@ -130,12 +147,20 @@ export default function PhaseDetail() {
               <p className="text-light-brown text-xs mt-1">Regresa mañana para continuar tu práctica diaria</p>
             </div>
             {nextPhase && (
-              <button
+              <div
                 onClick={() => navigate(`/phases/${nextPhase.id}`)}
-                className="w-full py-3 rounded-2xl font-semibold text-base bg-terracota text-white shadow-lg active:scale-95 transition-all"
+                style={nextPhase.bannerImage ? { backgroundImage: `url(${nextPhase.bannerImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                className="relative rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all"
               >
-                Continuar → Fase {nextPhase.id}
-              </button>
+                {nextPhase.bannerImage && <div className="absolute inset-0 bg-warm-brown/55" />}
+                <div className={`relative flex items-center justify-between p-4 ${!nextPhase.bannerImage ? 'bg-terracota' : ''}`}>
+                  <div>
+                    <p className="text-white/70 text-xs">Siguiente</p>
+                    <p className="text-white font-serif font-semibold">Fase {nextPhase.id}: {nextPhase.name}</p>
+                  </div>
+                  <span className="text-white text-xl">›</span>
+                </div>
+              </div>
             )}
           </div>
         )}
@@ -175,20 +200,28 @@ export default function PhaseDetail() {
                 <OfferCard offer={completionOffer} />
               </div>
             )}
-            <div className="flex gap-3">
+            <div className="space-y-2">
               {nextPhase && todayPhasesCount < 4 && (
-                <button
+                <div
                   onClick={() => { setShowCompleteModal(false); navigate(`/phases/${nextPhase.id}`) }}
-                  className="flex-1 bg-terracota text-white py-3 rounded-xl font-medium"
+                  style={nextPhase.bannerImage ? { backgroundImage: `url(${nextPhase.bannerImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                  className="relative rounded-2xl overflow-hidden cursor-pointer active:scale-95 transition-all"
                 >
-                  Siguiente fase →
-                </button>
+                  {nextPhase.bannerImage && <div className="absolute inset-0 bg-warm-brown/55" />}
+                  <div className={`relative flex items-center justify-between p-4 ${!nextPhase.bannerImage ? 'bg-terracota' : ''}`}>
+                    <div>
+                      <p className="text-white/70 text-xs">Siguiente fase</p>
+                      <p className="text-white font-serif font-semibold">Fase {nextPhase.id}: {nextPhase.name}</p>
+                    </div>
+                    <span className="text-white text-xl">›</span>
+                  </div>
+                </div>
               )}
               <button
                 onClick={() => { setShowCompleteModal(false); navigate('/dashboard') }}
-                className="flex-1 bg-beige text-warm-brown py-3 px-4 rounded-xl font-medium"
+                className="w-full bg-beige text-warm-brown py-3 px-4 rounded-xl font-medium"
               >
-                {todayPhasesCount >= 4 ? '¡Hasta mañana! 👋' : 'Inicio'}
+                {todayPhasesCount >= 4 ? '¡Hasta mañana! 👋' : 'Volver al inicio'}
               </button>
             </div>
           </div>

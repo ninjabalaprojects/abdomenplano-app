@@ -13,16 +13,17 @@ export default function Bonuses() {
           <div
             key={bonus.id}
             onClick={() => navigate(`/bonuses/${i + 1}`)}
-            className="bg-white rounded-2xl p-4 border border-pale-rose shadow-sm cursor-pointer active:scale-[0.98] transition-all"
+            style={bonus.bannerImage ? { backgroundImage: `url(${bonus.bannerImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+            className="relative rounded-2xl overflow-hidden border border-pale-rose shadow-sm cursor-pointer active:scale-[0.98] transition-all"
           >
-            <div className="flex items-start gap-3">
-              <div className="w-14 h-14 rounded-xl bg-beige flex items-center justify-center text-3xl flex-shrink-0">{bonus.icon}</div>
-              <div className="flex-1">
-                <span className="text-xs font-medium text-terracota">Bono {i + 1}</span>
-                <h3 className="font-serif text-warm-brown font-semibold">{bonus.name}</h3>
-                <p className="text-light-brown text-sm mt-1 line-clamp-2">{bonus.subtitle}</p>
+            {bonus.bannerImage && <div className="absolute inset-0 bg-warm-brown/55" />}
+            <div className="relative flex items-center gap-3 p-4">
+              <div className="flex-1 min-w-0">
+                <span className={`text-xs font-medium ${bonus.bannerImage ? 'text-white/70' : 'text-terracota'}`}>Bono {i + 1}</span>
+                <h3 className={`font-serif font-semibold ${bonus.bannerImage ? 'text-white' : 'text-warm-brown'}`}>{bonus.name}</h3>
+                <p className={`text-sm mt-1 line-clamp-2 ${bonus.bannerImage ? 'text-white/70' : 'text-light-brown'}`}>{bonus.subtitle}</p>
               </div>
-              <span className="text-terracota text-xl mt-2">›</span>
+              <span className={`text-xl flex-shrink-0 ${bonus.bannerImage ? 'text-white' : 'text-terracota'}`}>›</span>
             </div>
           </div>
         ))}

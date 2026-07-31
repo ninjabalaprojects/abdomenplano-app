@@ -4,9 +4,11 @@
       "id": "advanced-protocol",
       "name": "Protocolo Avanzado 90 Días",
       "description": "Lleva tu recuperación al siguiente nivel con el programa completo de 90 días.",
-      "price": "$27.00",
+      "price": "$9.90",
+      "originalPrice": "$37.00",
+      "discount": "73% OFF",
       "checkoutUrl": "https://checkout.example.com/advanced",
-      "imageUrl": "",
+      "imageUrl": "/images/phases/protocolo.jpg",
       "badge": "Más Vendido",
       "active": true
     },

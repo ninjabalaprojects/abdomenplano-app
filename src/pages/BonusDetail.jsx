@@ -11,10 +11,27 @@ export default function BonusDetail() {
 
   return (
     <div className="min-h-screen bg-cream pb-24">
-      <Header title={bonus.name} subtitle={bonus.subtitle} showBack />
+      {/* Hero with image */}
+      <div className="relative h-56 overflow-hidden bg-beige">
+        {bonus.bannerImage && (
+          <img src={bonus.bannerImage} alt={bonus.name} className="absolute inset-0 w-full h-full object-cover" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-warm-brown/80 via-warm-brown/30 to-warm-brown/20" />
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-4 left-4 z-10 w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-xl"
+        >
+          ‹
+        </button>
+        <div className="absolute bottom-0 left-0 right-0 px-4 pb-4">
+          <p className="text-white/70 text-xs">Bono incluido</p>
+          <h1 className="font-serif text-2xl text-white font-bold leading-tight">{bonus.name}</h1>
+          <p className="text-white/60 text-sm mt-0.5">{bonus.subtitle}</p>
+        </div>
+      </div>
+
       <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
-        <div className="bg-beige rounded-2xl p-5 text-center">
-          <div className="text-5xl mb-3">{bonus.icon}</div>
+        <div className="bg-beige rounded-2xl p-4">
           <p className="text-light-brown text-sm leading-relaxed">{bonus.description}</p>
         </div>
 

@@ -186,20 +186,6 @@ export default function Progress() {
               <input type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
             </label>
           </div>
-
-          {/* Guarantee */}
-          <div className="bg-gradient-to-br from-beige to-cream rounded-2xl p-4 border border-beige">
-            <h3 className="font-serif text-warm-brown font-semibold mb-2">🛡️ Garantía de {totalDays} días</h3>
-            <p className="text-light-brown text-sm leading-relaxed mb-3">
-              Si en {totalDays} días no ves resultados, devolvemos tu dinero con check-ins diarios y fotos de antes/después.
-            </p>
-            <a
-              href={`mailto:${APP_CONFIG.supportEmail}?subject=Garantía 60 días - ${userProfile?.name || ''}`}
-              className="block text-center bg-warm-brown text-white py-2 rounded-xl text-sm font-medium"
-            >
-              Contactar soporte →
-            </a>
-          </div>
         </div>
 
         <Navigation />

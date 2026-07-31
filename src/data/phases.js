@@ -6,7 +6,8 @@ export const PHASES = [
     description: 'Antes de activar, tu cuerpo necesita aprender a descomprimirse. Esta fase te enseña el patrón respiratorio correcto que libera la presión abdominal — el primer paso que la mayoría omite y por eso no ve resultados.',
     mechanism: 'La presión intraabdominal elevada es la principal razón por la que la diástasis no cierra. Al reducirla conscientemente, creamos el ambiente ideal para que el transverso abdominal pueda comenzar a trabajar.',
     duration: '10 min/día',
-    videoPlaceholderId: 'PHASE_1_VIDEO_ID',
+    videoPlaceholderId: 'bL3SBo5ZSUU',
+    bannerImage: '/images/phases/fase1.jpg',
     color: 'sage',
     emoji: '🌬️',
     checklistItems: [
@@ -26,6 +27,7 @@ export const PHASES = [
     mechanism: 'El transverso actúa como un corsé interno. Cuando se atrofia (lo cual pasa siempre en el embarazo), la linea alba no recibe el soporte que necesita para cerrarse. Activarlo es condición necesaria para cualquier recuperación real.',
     duration: '10 min/día',
     videoPlaceholderId: 'PHASE_2_VIDEO_ID',
+    bannerImage: '/images/phases/fase2.jpg',
     color: 'dusty-rose',
     emoji: '🎯',
     checklistItems: [
@@ -45,6 +47,7 @@ export const PHASES = [
     mechanism: 'La coordinación abdomen-suelo pélvico es lo que diferencia la recuperación real de "hacer abdominales". Sin esta conexión, los músculos superficiales compensan y la diástasis persiste sin importar cuánto ejercicio hagas.',
     duration: '10 min/día',
     videoPlaceholderId: 'PHASE_3_VIDEO_ID',
+    bannerImage: '/images/phases/fase3.jpg',
     color: 'terracota',
     emoji: '🔗',
     checklistItems: [
@@ -65,6 +68,7 @@ export const PHASES = [
     mechanism: 'La línea alba es tejido conectivo, no músculo. No se "fortalece" con abdominales. Se cierra cuando los músculos adyacentes (transverso + oblicuos internos) generan la tensión lateral correcta. Esta posición crea exactamente ese ambiente.',
     duration: '10 min/día',
     videoPlaceholderId: 'PHASE_4_VIDEO_ID',
+    bannerImage: '/images/phases/fase4.jpg',
     color: 'warm-brown',
     emoji: '✨',
     checklistItems: [

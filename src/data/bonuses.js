@@ -6,6 +6,7 @@ export const BONUSES = [
     description: 'Rutinas diarias de 15 minutos para piernas, caderas y cuerpo general — diseñadas específicamente para no agravar la diástasis mientras tonificas el resto del cuerpo.',
     icon: '🔥',
     color: 'terracota',
+    bannerImage: '/images/phases/bonus1.jpg',
     content: [
       { week: 1, name: 'Semana Activación', days: ['Piernas suaves', 'Caderas y glúteos', 'Movilidad', 'Brazos y hombros', 'Circuito suave', 'Descanso activo', 'Revisión + stretching'] },
       { week: 2, name: 'Semana Intensidad', days: ['Sentadillas guiadas', 'Puente de glúteos', 'Lunges sin impacto', 'Brazos con banda', 'Circuito completo', 'Yoga restaurativo', 'Revisión + medición'] },
@@ -19,6 +20,7 @@ export const BONUSES = [
     description: 'Programa de 4 semanas para corregir la postura postparto, aliviar el dolor lumbar y recuperar la movilidad que el embarazo limitó.',
     icon: '🧘',
     color: 'sage',
+    bannerImage: '/images/phases/bonus2.jpg',
     content: [
       { module: 1, name: 'Liberación de tensión', description: 'Técnicas de foam rolling y estiramientos para la cadena posterior tensa por el embarazo.' },
       { module: 2, name: 'Corrección postural', description: 'Ejercicios específicos para revertir la hiperlordosis lumbar y la protrusión de hombros.' },
@@ -32,6 +34,7 @@ export const BONUSES = [
     subtitle: '7 días de alimentación que potencia tu recuperación',
     description: 'No es una dieta. Es una guía de alimentación anti-inflamatoria que potencia el cierre de la diástasis desde adentro — sin restricciones extremas, sin contar calorías.',
     icon: '🥗',
+    bannerImage: '/images/phases/bonus3.jpg',
     color: 'dusty-rose',
     isGuide: true,
     content: {

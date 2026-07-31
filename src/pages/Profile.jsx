@@ -52,10 +52,6 @@ export default function Profile() {
               <p className="font-medium text-warm-brown text-sm">Garantía de satisfacción — 60 días</p>
               <p className="text-light-brown text-xs mt-1">Si en 60 días no ves resultados, devolvemos tu inversión. Necesitas el 80% de check-ins + fotos de antes/después.</p>
             </div>
-            <div className="bg-white rounded-xl p-3">
-              <p className="font-medium text-warm-brown text-sm">Garantía de resultados</p>
-              <p className="text-light-brown text-xs mt-1">Si sigues el protocolo al pie de la letra (todas las fases + check-ins diarios) y no ves ningún cambio en 60 días, te devolvemos el 100%.</p>
-            </div>
           </div>
           <a
             href={`mailto:${APP_CONFIG.supportEmail}?subject=Soporte - ${userProfile?.name || ''}`}

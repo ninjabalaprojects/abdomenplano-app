@@ -8,6 +8,8 @@ import { DAILY_MESSAGES, MILESTONE_MESSAGES } from '../data/messages'
 import offersConfig from '../config/offers.json'
 import OfferCard from '../components/OfferCard'
 import Navigation from '../components/Navigation'
+import PhaseCard from '../components/PhaseCard'
+import { BONUSES } from '../data/bonuses'
 import StreakCard from '../components/StreakCard'
 import AchievementToast from '../components/AchievementToast'
 import MilestoneModal from '../components/MilestoneModal'
@@ -119,18 +121,17 @@ export default function Dashboard() {
             <motion.div
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate(`/phases/${nextPhase.id}`)}
-              className="bg-white rounded-2xl p-4 border border-pale-rose shadow-sm cursor-pointer"
+              style={nextPhase.bannerImage ? { backgroundImage: `url(${nextPhase.bannerImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+              className={`relative rounded-2xl overflow-hidden border border-pale-rose shadow-sm cursor-pointer ${!nextPhase.bannerImage ? 'bg-white' : ''}`}
             >
-              <div className="flex items-center gap-3">
-                <div className="w-14 h-14 rounded-2xl bg-terracota/10 flex items-center justify-center text-3xl flex-shrink-0">
-                  {nextPhase.emoji}
-                </div>
+              {nextPhase.bannerImage && <div className="absolute inset-0 bg-warm-brown/55" />}
+              <div className="relative flex items-center gap-3 p-4">
                 <div className="flex-1">
-                  <span className="text-xs text-terracota font-medium">Fase {nextPhase.id}</span>
-                  <h3 className="font-serif text-warm-brown font-semibold leading-tight">{nextPhase.name}</h3>
-                  <p className="text-light-brown text-xs mt-0.5">{nextPhase.duration}</p>
+                  <span className={`text-xs font-medium ${nextPhase.bannerImage ? 'text-white/70' : 'text-terracota'}`}>Fase {nextPhase.id}</span>
+                  <h3 className={`font-serif font-semibold leading-tight ${nextPhase.bannerImage ? 'text-white' : 'text-warm-brown'}`}>{nextPhase.name}</h3>
+                  <p className={`text-xs mt-0.5 ${nextPhase.bannerImage ? 'text-white/60' : 'text-light-brown'}`}>{nextPhase.duration}</p>
                 </div>
-                <div className="w-8 h-8 rounded-full bg-terracota flex items-center justify-center text-white text-sm">›</div>
+                <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white text-sm flex-shrink-0">›</div>
               </div>
             </motion.div>
           </motion.div>
@@ -155,31 +156,16 @@ export default function Dashboard() {
             <button onClick={() => navigate('/phases')} className="text-terracota text-sm font-medium">Ver todas →</button>
           </div>
           <div className="grid grid-cols-2 gap-3">
-            {PHASES.map((phase, i) => {
-              const unlocked = isPhaseUnlocked(phase.id)
-              const doneToday = isPhaseCompleteToday(phase.id)
-              return (
-                <motion.div
-                  key={phase.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.35 + i * 0.06 }}
-                  whileTap={unlocked ? { scale: 0.95 } : {}}
-                  onClick={() => unlocked && navigate(`/phases/${phase.id}`)}
-                  className={`rounded-2xl p-3 border transition-all ${
-                    doneToday ? 'bg-sage/10 border-sage/30' :
-                    unlocked ? 'bg-white border-pale-rose shadow-sm cursor-pointer' :
-                    'bg-beige/50 border-beige opacity-50 cursor-not-allowed'
-                  }`}
-                >
-                  <div className="text-2xl mb-1">{doneToday ? '✅' : unlocked ? phase.emoji : '🔒'}</div>
-                  <p className="text-xs text-light-brown">Fase {phase.id}</p>
-                  <p className="text-sm font-medium text-warm-brown leading-tight">{phase.name}</p>
-                  {doneToday && <p className="text-[10px] text-sage mt-0.5 font-medium">Hecha hoy ✓</p>}
-                  {!doneToday && unlocked && <p className="text-[10px] text-terracota mt-0.5">Pendiente</p>}
-                </motion.div>
-              )
-            })}
+            {PHASES.map((phase, i) => (
+              <motion.div
+                key={phase.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35 + i * 0.06 }}
+              >
+                <PhaseCard phase={phase} compact />
+              </motion.div>
+            ))}
           </div>
         </motion.div>
 
@@ -190,19 +176,18 @@ export default function Dashboard() {
             <button onClick={() => navigate('/bonuses')} className="text-terracota text-sm font-medium">Ver todos →</button>
           </div>
           <div className="grid grid-cols-3 gap-2">
-            {[
-              { emoji: '🔥', name: 'Queima 21', path: '/bonuses/1' },
-              { emoji: '🧘', name: 'Super Flex', path: '/bonuses/2' },
-              { emoji: '🥗', name: 'Guía Nutri', path: '/bonuses/3' },
-            ].map((b, i) => (
+            {BONUSES.map((bonus, i) => (
               <motion.div
-                key={i}
+                key={bonus.id}
                 whileTap={{ scale: 0.93 }}
-                onClick={() => navigate(b.path)}
-                className="bg-white rounded-2xl p-3 text-center border border-pale-rose shadow-sm cursor-pointer"
+                onClick={() => navigate(`/bonuses/${i + 1}`)}
+                style={bonus.bannerImage ? { backgroundImage: `url(${bonus.bannerImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                className="relative rounded-2xl overflow-hidden border border-pale-rose shadow-sm cursor-pointer min-h-[90px]"
               >
-                <div className="text-2xl mb-1">{b.emoji}</div>
-                <p className="text-xs text-warm-brown font-medium leading-tight">{b.name}</p>
+                {bonus.bannerImage && <div className="absolute inset-0 bg-warm-brown/55" />}
+                <div className="relative p-3 flex flex-col items-center justify-center text-center h-full min-h-[90px]">
+                  <p className={`text-xs font-medium leading-tight ${bonus.bannerImage ? 'text-white' : 'text-warm-brown'}`}>{bonus.name}</p>
+                </div>
               </motion.div>
             ))}
           </div>
