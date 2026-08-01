@@ -11,6 +11,15 @@ import Progress from './pages/Progress'
 import Bonuses from './pages/Bonuses'
 import BonusDetail from './pages/BonusDetail'
 import Profile from './pages/Profile'
+import ColagenoHormonal from './pages/ColagenoHormonal'
+import ColagenoDetail from './pages/ColagenoDetail'
+
+// Rota protegida por entitlement — redireciona para dashboard se não tiver acesso
+function EntitlementRoute({ productKey, children }) {
+  const { isUnlocked } = useEntitlements()
+  if (!isUnlocked(productKey)) return <Navigate to="/dashboard" replace />
+  return children
+}
 
 function AppRoutes() {
   const { userProfile } = useProgressContext()
@@ -18,7 +27,6 @@ function AppRoutes() {
   const hasProfile = !!userProfile
   const hasEmail = !!email
 
-  // Passo 1: coletar nome
   if (!hasProfile) {
     return (
       <Routes>
@@ -27,7 +35,6 @@ function AppRoutes() {
     )
   }
 
-  // Passo 2: verificar email de compra
   if (!hasEmail) {
     return (
       <Routes>
@@ -46,6 +53,17 @@ function AppRoutes() {
       <Route path="/bonuses" element={<Bonuses />} />
       <Route path="/bonuses/:id" element={<BonusDetail />} />
       <Route path="/profile" element={<Profile />} />
+      {/* Rotas protegidas por entitlement */}
+      <Route path="/colageno-hormonal" element={
+        <EntitlementRoute productKey="colageno_hormonal">
+          <ColagenoHormonal />
+        </EntitlementRoute>
+      } />
+      <Route path="/colageno-hormonal/:moduleId" element={
+        <EntitlementRoute productKey="colageno_hormonal">
+          <ColagenoDetail />
+        </EntitlementRoute>
+      } />
       <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )

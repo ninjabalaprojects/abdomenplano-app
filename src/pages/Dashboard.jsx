@@ -213,22 +213,43 @@ export default function Dashboard() {
         {COLAGENO_OFFER && (
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
             {cologenoUnlocked ? (
-              // Produto desbloqueado
-              <div className="bg-gradient-to-br from-dusty-rose/10 to-pale-rose/20 rounded-2xl p-4 border border-dusty-rose/30">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs bg-sage text-white px-2 py-0.5 rounded-full font-medium">✓ Desbloqueado</span>
+              // ✅ DESBLOQUEADO — clique leva para a página de conteúdo
+              <motion.div
+                whileTap={{ scale: 0.97 }}
+                onClick={() => navigate('/colageno-hormonal')}
+                className="bg-white rounded-2xl border border-pale-rose shadow-sm overflow-hidden cursor-pointer"
+              >
+                <div className="relative flex items-center justify-center bg-beige overflow-hidden">
+                  {COLAGENO_OFFER.image
+                    ? <img src={COLAGENO_OFFER.image} alt={COLAGENO_OFFER.name} className="w-full object-contain" />
+                    : <div className="h-32 w-full flex items-center justify-center"><span className="text-4xl">✨</span></div>
+                  }
+                  <span className="absolute top-3 right-3 text-xs bg-sage text-white px-3 py-1 rounded-full font-medium shadow">
+                    ✓ Desbloqueado
+                  </span>
                 </div>
-                <h3 className="font-serif text-warm-brown font-semibold">{COLAGENO_OFFER.name}</h3>
-                <p className="text-light-brown text-xs mt-1 leading-relaxed">{COLAGENO_OFFER.description}</p>
-              </div>
+                <div className="p-4 flex items-center justify-between gap-3">
+                  <div>
+                    <h3 className="font-serif text-lg text-warm-brown font-semibold">{COLAGENO_OFFER.name}</h3>
+                    <p className="text-light-brown text-xs mt-0.5">{COLAGENO_OFFER.description}</p>
+                  </div>
+                  <span className="text-terracota text-2xl flex-shrink-0">›</span>
+                </div>
+              </motion.div>
             ) : (
-              // Oferta de compra
+              // 🔒 BLOQUEADO — card com cadeado, clique leva ao checkout
               <div className="bg-white rounded-2xl border border-pale-rose shadow-sm overflow-hidden">
                 <div className="relative flex items-center justify-center bg-beige overflow-hidden">
                   {COLAGENO_OFFER.image
                     ? <img src={COLAGENO_OFFER.image} alt={COLAGENO_OFFER.name} className="w-full object-contain" />
                     : <div className="h-32 w-full flex items-center justify-center"><span className="text-4xl">✨</span></div>
                   }
+                  {/* Cadeado overlay */}
+                  <div className="absolute inset-0 bg-warm-brown/30 flex items-center justify-center">
+                    <div className="bg-white/90 rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
+                      <span className="text-2xl">🔒</span>
+                    </div>
+                  </div>
                   <span className="absolute top-3 right-3 text-xs bg-terracota text-white px-3 py-1 rounded-full font-medium shadow">
                     {COLAGENO_OFFER.tag || 'Edición Especial'}
                   </span>
