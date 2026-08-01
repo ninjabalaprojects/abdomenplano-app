@@ -101,7 +101,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/entitlements`, {
+    // on_conflict=email,product é obrigatório para o upsert funcionar corretamente
+    const response = await fetch(`${supabaseUrl}/rest/v1/entitlements?on_conflict=email,product`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
