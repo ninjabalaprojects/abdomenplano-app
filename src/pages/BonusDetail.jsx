@@ -30,7 +30,7 @@ export default function BonusDetail() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
+      <div className="max-w-lg mx-auto px-4 pt-4 pb-8 space-y-5">
         {/* PDF button */}
         {bonus.pdfUrl && (
           <a

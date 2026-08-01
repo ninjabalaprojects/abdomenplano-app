@@ -24,7 +24,7 @@ body {
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .pb-nav-safe {
-    /* Nav height (64px) + bottom safe area */
-    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+    /* Nav height (~72px) + extra breathing room + bottom safe area */
+    padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
