@@ -1,52 +1,131 @@
-import { createHash, createHmac } from 'crypto'
+import { createHmac, timingSafeEqual } from 'crypto'
 
-// Mapeamento de nomes de produto da Kiwify → chave interna do app
+// Desabilitar o parse automático do body para poder ler o raw string
+// necessário para calcular o HMAC sobre a string exata enviada pela Kiwify
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+// Mapeamento produto → entitlement_key
+// Usar product_name como chave (confirmar se product_id é mais estável após testes)
 const PRODUCT_MAP = {
   'Protocolo Abdomen Plano': 'abdomen_plano',
   'Protocolo Colágeno Hormonal': 'colageno_hormonal',
 }
 
-const APPROVED_EVENTS = ['order_approved', 'paid', 'approved', 'complete', 'completed']
-const REFUND_EVENTS = ['order_refunded', 'refunded', 'chargedback', 'chargeback', 'cancelled', 'order_cancelled']
+// Eventos confirmados pelo teste real
+const EVENTOS_LIBERACAO = ['order_approved']
+// ATENÇÃO: valores de reembolso/chargeback ainda precisam ser confirmados
+// com um teste real na Kiwify — adicionar os valores corretos quando confirmado
+const EVENTOS_REVOGACAO = ['order_refunded', 'chargeback', 'order_chargeback']
+
+async function lerRawBody(req) {
+  return new Promise((resolve, reject) => {
+    const chunks = []
+    req.on('data', chunk => chunks.push(chunk))
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
+    req.on('error', reject)
+  })
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const token = process.env.KIWIFY_WEBHOOK_TOKEN || ''
-  const receivedSignature = req.query.signature || ''
-  const body = req.body
-
-  // rawBody como JSON.stringify do body parseado (melhor aproximação disponível)
-  // NOTA: pode diferir da string original enviada pela Kiwify se os campos vieram em ordem diferente
-  const rawBody = JSON.stringify(body)
-  const orderId = body?.order_id || ''
-
-  // === DEBUG — calcular todos os candidatos de hash ===
-  const candidatos = {
-    sha1_token:           createHash('sha1').update(token).digest('hex'),
-    sha1_token_orderId:   createHash('sha1').update(token + orderId).digest('hex'),
-    sha1_orderId_token:   createHash('sha1').update(orderId + token).digest('hex'),
-    sha1_token_body:      createHash('sha1').update(token + rawBody).digest('hex'),
-    sha1_body_token:      createHash('sha1').update(rawBody + token).digest('hex'),
-    md5_token:            createHash('md5').update(token).digest('hex'),
-    md5_token_orderId:    createHash('md5').update(token + orderId).digest('hex'),
-    hmac_sha1_body:       createHmac('sha1', token).update(rawBody).digest('hex'),
-    hmac_sha256_body:     createHmac('sha256', token).update(rawBody).digest('hex'),
-    hmac_sha1_orderId:    createHmac('sha1', token).update(orderId).digest('hex'),
-    hmac_sha256_orderId:  createHmac('sha256', token).update(orderId).digest('hex'),
+  // Ler body cru (string), necessário para validar HMAC corretamente
+  let rawBody
+  let body
+  try {
+    rawBody = await lerRawBody(req)
+    body = JSON.parse(rawBody)
+  } catch (err) {
+    console.error('Erro ao ler/parsear body:', err.message)
+    return res.status(400).json({ error: 'Invalid body' })
   }
 
-  console.log('SIGNATURE RECEBIDA:', receivedSignature)
-  console.log('ORDER_ID usado:', orderId)
-  console.log('CANDIDATOS:', JSON.stringify(candidatos, null, 2))
+  // Validação HMAC-SHA1 com comparação resistente a timing attack
+  const token = process.env.KIWIFY_WEBHOOK_TOKEN || ''
+  const receivedSig = req.query.signature || ''
+  const expectedSig = createHmac('sha1', token).update(rawBody).digest('hex')
 
-  const match = Object.entries(candidatos).find(([, valor]) => valor === receivedSignature)
-  console.log('MATCH ENCONTRADO:', match ? match[0] : 'NENHUM CANDIDATO BATEU')
+  let valid = false
+  try {
+    valid = timingSafeEqual(
+      Buffer.from(expectedSig, 'hex'),
+      Buffer.from(receivedSig.padEnd(expectedSig.length, '0'), 'hex').slice(0, Buffer.from(expectedSig, 'hex').length)
+    )
+  } catch {
+    valid = false
+  }
 
-  // === Manter rejeição 401 até confirmar a fórmula correta ===
-  // (Substituir por validação definitiva quando MATCH for encontrado)
-  console.error('Rejeitando até confirmar fórmula de validação.')
-  return res.status(401).json({ error: 'Unauthorized — validação em debug' })
+  if (!valid) {
+    console.error('Assinatura inválida. Esperada:', expectedSig, '| Recebida:', receivedSig)
+    return res.status(401).json({ error: 'Assinatura inválida' })
+  }
+
+  // Campos confirmados pelo payload real da Kiwify
+  const evento = body?.webhook_event_type || ''
+  const email = body?.Customer?.email || ''
+  const productName = body?.Product?.product_name || body?.Product?.name || ''
+
+  console.log('Webhook validado. Evento:', evento, '| Email:', email, '| Produto:', productName)
+
+  if (!email) {
+    console.error('Email não encontrado no payload')
+    return res.status(200).json({ received: true, warning: 'no_email_found' })
+  }
+
+  const normalizedEvento = String(evento).toLowerCase()
+  const isLiberacao = EVENTOS_LIBERACAO.includes(normalizedEvento)
+  const isRevogacao = EVENTOS_REVOGACAO.includes(normalizedEvento)
+
+  if (!isLiberacao && !isRevogacao) {
+    console.log('Evento ignorado (não é compra nem reembolso):', evento)
+    return res.status(200).json({ received: true, ignored: true, evento })
+  }
+
+  const productKey = PRODUCT_MAP[productName] || 'abdomen_plano'
+  const active = isLiberacao
+
+  console.log(`Upsert Supabase: email=${email} | produto=${productKey} | active=${active}`)
+
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseKey) {
+    console.error('Variáveis SUPABASE_URL ou SUPABASE_SERVICE_ROLE_KEY não configuradas')
+    return res.status(500).json({ error: 'Server configuration error' })
+  }
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/entitlements`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Prefer': 'resolution=merge-duplicates,return=minimal',
+      },
+      body: JSON.stringify({
+        email: email.toLowerCase().trim(),
+        product: productKey,
+        active,
+      }),
+    })
+
+    if (!response.ok) {
+      const errText = await response.text()
+      console.error('Erro Supabase:', response.status, errText)
+      return res.status(500).json({ error: 'Database error' })
+    }
+
+    console.log('Supabase OK:', productKey, active ? 'LIBERADO' : 'REVOGADO')
+    return res.status(200).json({ received: true, product: productKey, active })
+  } catch (err) {
+    console.error('Erro ao conectar Supabase:', err.message)
+    return res.status(500).json({ error: 'Connection error' })
+  }
 }
