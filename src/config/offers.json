@@ -7,6 +7,8 @@
       "tag": "Edición Especial",
       "description": "El complemento hormonal que tu cuerpo necesita en esta etapa — colágeno, firmeza y equilibrio metabólico.",
       "price": 17,
+      "originalPrice": 57,
+      "discount": "70% OFF",
       "currency": "USD",
       "image": "/assets/offers/colageno-hormonal-banner.jpg",
       "checkout_url": "https://pay.kiwify.com/YI0PrZJ",

@@ -239,9 +239,16 @@ export default function Dashboard() {
                   <p className="text-light-brown text-xs mt-1 mb-3 leading-relaxed">{COLAGENO_OFFER.description}</p>
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <span className="text-terracota font-bold text-2xl">${COLAGENO_OFFER.price} USD</span>
-                      {COLAGENO_OFFER.guarantee_days && (
-                        <p className="text-light-brown/60 text-xs mt-0.5">Garantía {COLAGENO_OFFER.guarantee_days} días</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-terracota font-bold text-2xl">${COLAGENO_OFFER.price} USD</span>
+                        {COLAGENO_OFFER.originalPrice && (
+                          <span className="text-light-brown/50 text-sm line-through">${COLAGENO_OFFER.originalPrice}</span>
+                        )}
+                      </div>
+                      {COLAGENO_OFFER.discount && (
+                        <span className="inline-block bg-terracota/10 text-terracota text-xs font-bold px-2 py-0.5 rounded-full mt-0.5">
+                          {COLAGENO_OFFER.discount} · Solo por hoy
+                        </span>
                       )}
                     </div>
                     <a
