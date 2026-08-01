@@ -8,7 +8,7 @@ export default function Bonuses() {
   return (
     <div className="min-h-screen bg-cream pb-nav-safe">
       <Header title="Tus Bonos" subtitle="3 programas complementarios incluidos" />
-      <div className="max-w-lg mx-auto px-4 pt-4 pb-6 space-y-4">
+      <div className="max-w-lg mx-auto px-4 pt-4 pb-10 space-y-4">
         {BONUSES.map((bonus, i) => (
           <div
             key={bonus.id}

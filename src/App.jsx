@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ProgressProvider, useProgressContext } from './context/ProgressContext'
+import { EntitlementProvider, useEntitlements } from './context/EntitlementContext'
 
 import Onboarding from './pages/Onboarding'
+import EmailGate from './pages/EmailGate'
 import Dashboard from './pages/Dashboard'
 import Phases from './pages/Phases'
 import PhaseDetail from './pages/PhaseDetail'
@@ -12,19 +14,39 @@ import Profile from './pages/Profile'
 
 function AppRoutes() {
   const { userProfile } = useProgressContext()
+  const { email } = useEntitlements()
   const hasProfile = !!userProfile
+  const hasEmail = !!email
+
+  // Passo 1: coletar nome
+  if (!hasProfile) {
+    return (
+      <Routes>
+        <Route path="*" element={<Onboarding />} />
+      </Routes>
+    )
+  }
+
+  // Passo 2: verificar email de compra
+  if (!hasEmail) {
+    return (
+      <Routes>
+        <Route path="*" element={<EmailGate />} />
+      </Routes>
+    )
+  }
 
   return (
     <Routes>
-      <Route path="/" element={hasProfile ? <Navigate to="/dashboard" /> : <Onboarding />} />
-      <Route path="/dashboard" element={hasProfile ? <Dashboard /> : <Navigate to="/" />} />
-      <Route path="/phases" element={hasProfile ? <Phases /> : <Navigate to="/" />} />
-      <Route path="/phases/:id" element={hasProfile ? <PhaseDetail /> : <Navigate to="/" />} />
-      <Route path="/progress" element={hasProfile ? <Progress /> : <Navigate to="/" />} />
-      <Route path="/bonuses" element={hasProfile ? <Bonuses /> : <Navigate to="/" />} />
-      <Route path="/bonuses/:id" element={hasProfile ? <BonusDetail /> : <Navigate to="/" />} />
-      <Route path="/profile" element={hasProfile ? <Profile /> : <Navigate to="/" />} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="/" element={<Navigate to="/dashboard" />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/phases" element={<Phases />} />
+      <Route path="/phases/:id" element={<PhaseDetail />} />
+      <Route path="/progress" element={<Progress />} />
+      <Route path="/bonuses" element={<Bonuses />} />
+      <Route path="/bonuses/:id" element={<BonusDetail />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   )
 }
@@ -33,7 +55,9 @@ export default function App() {
   return (
     <BrowserRouter>
       <ProgressProvider>
-        <AppRoutes />
+        <EntitlementProvider>
+          <AppRoutes />
+        </EntitlementProvider>
       </ProgressProvider>
     </BrowserRouter>
   )

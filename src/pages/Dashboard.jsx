@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useProgressContext as useProgress } from '../context/ProgressContext'
+import { useEntitlements } from '../context/EntitlementContext'
 import { PHASES } from '../data/phases'
 import { APP_CONFIG } from '../config/app.config'
 import { DAILY_MESSAGES, MILESTONE_MESSAGES } from '../data/messages'
@@ -11,7 +12,9 @@ import { BONUSES } from '../data/bonuses'
 import StreakCard from '../components/StreakCard'
 import AchievementToast from '../components/AchievementToast'
 import MilestoneModal from '../components/MilestoneModal'
-import PageTransition from '../components/PageTransition'
+import OFFERS from '../config/offers.json'
+
+const COLAGENO_OFFER = OFFERS.offers.find(o => o.id === 'colageno_hormonal')
 
 export default function Dashboard() {
   const navigate = useNavigate()
@@ -22,17 +25,22 @@ export default function Dashboard() {
     getDaysSinceStart, getTotalCheckins, checkNewAchievements,
   } = useProgress()
 
+  const { isUnlocked, fetchEntitlements } = useEntitlements()
+
   const [toastAchievement, setToastAchievement] = useState(null)
   const [milestone, setMilestone] = useState(null)
   const [shownMilestones, setShownMilestones] = useState(() => {
     try { return JSON.parse(localStorage.getItem('shown_milestones') || '[]') } catch { return [] }
   })
 
+  // Revalidar entitlements toda vez que o dashboard abre
+  useEffect(() => {
+    fetchEntitlements()
+  }, [])
+
   const phasesCompletedToday = getPhasesCompletedToday()
   const unlockedPhasesList = PHASES.filter(p => isPhaseEverCompleted(p.id) || isPhaseUnlocked(p.id))
   const todayProgress = phasesCompletedToday.length
-  const totalUnlocked = unlockedPhasesList.length
-  // next phase to do today = first unlocked phase not done today
   const nextPhase = PHASES.find(p => isPhaseUnlocked(p.id) && !isPhaseCompleteToday(p.id))
   const progress = (phasesCompletedToday.length / PHASES.length) * 100
   const checkedIn = hasCheckedInToday()
@@ -40,11 +48,13 @@ export default function Dashboard() {
   const daysSinceStart = getDaysSinceStart()
   const totalCheckins = getTotalCheckins()
   const dailyMsg = DAILY_MESSAGES[daysSinceStart % DAILY_MESSAGES.length]
-const handleCheckIn = () => {
+
+  const cologenoUnlocked = isUnlocked('colageno_hormonal')
+
+  const handleCheckIn = () => {
     checkInToday()
     const newAchievements = checkNewAchievements()
     if (newAchievements.length > 0) setToastAchievement(newAchievements[0])
-    // check milestones
     const newStreak = streak + 1
     const ms = MILESTONE_MESSAGES[newStreak]
     if (ms && !shownMilestones.includes(newStreak)) {
@@ -198,6 +208,56 @@ const handleCheckIn = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* Protocolo Colágeno Hormonal */}
+        {COLAGENO_OFFER && (
+          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+            {cologenoUnlocked ? (
+              // Produto desbloqueado
+              <div className="bg-gradient-to-br from-dusty-rose/10 to-pale-rose/20 rounded-2xl p-4 border border-dusty-rose/30">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs bg-sage text-white px-2 py-0.5 rounded-full font-medium">✓ Desbloqueado</span>
+                </div>
+                <h3 className="font-serif text-warm-brown font-semibold">{COLAGENO_OFFER.name}</h3>
+                <p className="text-light-brown text-xs mt-1 leading-relaxed">{COLAGENO_OFFER.description}</p>
+              </div>
+            ) : (
+              // Oferta de compra
+              <div className="bg-white rounded-2xl border border-pale-rose shadow-sm overflow-hidden">
+                <div
+                  className="h-32 bg-gradient-to-br from-dusty-rose/30 to-terracota/20 flex items-center justify-center relative"
+                  style={COLAGENO_OFFER.image ? { backgroundImage: `url(${COLAGENO_OFFER.image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
+                >
+                  {COLAGENO_OFFER.image && <div className="absolute inset-0 bg-warm-brown/30" />}
+                  {!COLAGENO_OFFER.image && <span className="text-4xl">✨</span>}
+                  <span className="relative z-10 text-xs bg-terracota text-white px-3 py-1 rounded-full font-medium">
+                    {COLAGENO_OFFER.tag || 'Edición Especial'}
+                  </span>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-serif text-lg text-warm-brown font-semibold">{COLAGENO_OFFER.name}</h3>
+                  <p className="text-light-brown text-xs mt-1 mb-3 leading-relaxed">{COLAGENO_OFFER.description}</p>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <span className="text-terracota font-bold text-2xl">${COLAGENO_OFFER.price} USD</span>
+                      {COLAGENO_OFFER.guarantee_days && (
+                        <p className="text-light-brown/60 text-xs mt-0.5">Garantía {COLAGENO_OFFER.guarantee_days} días</p>
+                      )}
+                    </div>
+                    <a
+                      href={COLAGENO_OFFER.checkout_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-terracota text-white px-4 py-2.5 rounded-xl text-sm font-semibold active:scale-95 transition-all flex-shrink-0"
+                    >
+                      Quiero esto →
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
 
       </div>
 

@@ -1,19 +1,37 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useProgressContext as useProgress } from '../context/ProgressContext'
+import { useEntitlements } from '../context/EntitlementContext'
 import { APP_CONFIG } from '../config/app.config'
 import { PHASES } from '../data/phases'
 import Header from '../components/Header'
 import Navigation from '../components/Navigation'
-import { useNavigate } from 'react-router-dom'
 
 export default function Profile() {
   const { userProfile, completedPhases, getTotalCheckins, getDaysSinceStart, photos } = useProgress()
+  const { email, clearEmail, fetchEntitlements, loading: entitlementLoading, error: entitlementError } = useEntitlements()
   const navigate = useNavigate()
+  const [refreshed, setRefreshed] = useState(false)
 
   const handleReset = () => {
     if (window.confirm('¿Segura que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
       localStorage.clear()
       navigate('/')
     }
+  }
+
+  const handleChangeEmail = () => {
+    if (window.confirm('¿Cambiar el correo? Tendrás que ingresar tu correo de compra nuevamente.')) {
+      clearEmail()
+      // App redireccionará al EmailGate automáticamente
+    }
+  }
+
+  const handleRefreshAccess = async () => {
+    setRefreshed(false)
+    await fetchEntitlements()
+    setRefreshed(true)
+    setTimeout(() => setRefreshed(false), 3000)
   }
 
   return (
@@ -45,7 +63,34 @@ export default function Profile() {
           ))}
         </div>
 
-        {/* Guarantee */}
+        {/* Email & access */}
+        <div className="bg-white rounded-2xl p-4 border border-beige shadow-sm space-y-3">
+          <h3 className="font-serif text-warm-brown font-semibold">📧 Correo de acceso</h3>
+          <p className="text-sm text-warm-brown font-medium break-all">{email || '—'}</p>
+          {entitlementError && (
+            <p className="text-xs text-red-400">Error al actualizar acceso. Intenta de nuevo.</p>
+          )}
+          {refreshed && (
+            <p className="text-xs text-sage font-medium">✅ Acceso actualizado</p>
+          )}
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={handleRefreshAccess}
+              disabled={entitlementLoading}
+              className="flex-1 bg-terracota text-white py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 active:scale-95 transition-all"
+            >
+              {entitlementLoading ? 'Actualizando...' : 'Actualizar mi acceso'}
+            </button>
+            <button
+              onClick={handleChangeEmail}
+              className="flex-1 bg-beige text-warm-brown py-2.5 rounded-xl text-sm font-medium active:scale-95 transition-all"
+            >
+              Cambiar correo
+            </button>
+          </div>
+        </div>
+
+        {/* Support */}
         <div className="bg-beige rounded-2xl p-4">
           <h3 className="font-serif text-warm-brown font-semibold mb-3">🛡️ Central de Garantías</h3>
           <div className="bg-white rounded-xl p-3">

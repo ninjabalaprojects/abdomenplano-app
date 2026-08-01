@@ -1,26 +1,16 @@
 {
   "offers": [
     {
-      "id": "advanced-protocol",
-      "name": "Protocolo Avanzado 90 Días",
-      "description": "Lleva tu recuperación al siguiente nivel con el programa completo de 90 días.",
-      "price": "$9.90",
-      "originalPrice": "$37.00",
-      "discount": "73% OFF",
-      "checkoutUrl": "https://checkout.example.com/advanced",
-      "imageUrl": "/images/phases/protocolo.jpg",
-      "badge": "Más Vendido",
-      "active": true
-    },
-    {
-      "id": "nutrition-guide",
-      "name": "Plan Nutricional Completo",
-      "description": "Alimentación anti-inflamatoria personalizada para acelerar el cierre de la diástasis.",
-      "price": "$17.00",
-      "checkoutUrl": "https://checkout.example.com/nutrition",
-      "imageUrl": "",
-      "badge": "Nuevo",
-      "active": true
+      "id": "colageno_hormonal",
+      "entitlement_key": "colageno_hormonal",
+      "name": "Protocolo Colágeno Hormonal",
+      "tag": "Edición Especial",
+      "description": "El complemento hormonal que tu cuerpo necesita en esta etapa — colágeno, firmeza y equilibrio metabólico.",
+      "price": 17,
+      "currency": "USD",
+      "image": "/assets/offers/colageno-hormonal-banner.jpg",
+      "checkout_url": "https://pay.kiwify.com/YI0PrZJ",
+      "guarantee_days": 30
     }
   ]
 }
