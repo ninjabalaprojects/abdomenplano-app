@@ -6,49 +6,43 @@ const PRODUCT_MAP = {
 }
 
 // Eventos que indicam compra aprovada
-const APPROVED_EVENTS = ['paid', 'approved', 'complete', 'completed', 'order_approved']
-// Eventos que indicam reembolso ou chargeback
-const REFUND_EVENTS = ['refunded', 'chargedback', 'chargeback', 'cancelled', 'order_refunded']
+const APPROVED_EVENTS = ['order_approved', 'paid', 'approved', 'complete', 'completed']
+// Eventos que indicam reembolso ou chargeback (confirmar valores reais via logs)
+const REFUND_EVENTS = ['order_refunded', 'refunded', 'chargedback', 'chargeback', 'cancelled', 'order_cancelled']
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  // === DEBUG TEMPORÁRIO — remover após resolver validação ===
+  // === DEBUG TEMPORÁRIO — manter até confirmar parsing completo ===
   console.log('DEBUG headers:', JSON.stringify(req.headers))
-  console.log('DEBUG body:', JSON.stringify(req.body))
   console.log('DEBUG query:', JSON.stringify(req.query))
+  console.log('DEBUG body completo:', JSON.stringify(req.body, null, 2))
+  console.log('DEBUG customer:', JSON.stringify(req.body?.Customer, null, 2))
+  console.log('DEBUG product:', JSON.stringify(req.body?.Product, null, 2))
   console.log('DEBUG token env carregado:', !!process.env.KIWIFY_WEBHOOK_TOKEN)
-  // ==========================================================
+  // ================================================================
 
-  // Validar token (Kiwify envia via query param ou campo no body)
-  const token =
-    req.query.token ||
-    req.headers['x-kiwify-token'] ||
-    req.body?.webhook_token
+  // TAREFA 1: token vem como query param ?signature=...
+  const signature = req.query.signature
 
-  if (token !== process.env.KIWIFY_WEBHOOK_TOKEN) {
-    console.error('Webhook token inválido. Recebido de query:', req.query.token, '| header x-kiwify-token:', req.headers['x-kiwify-token'], '| body.webhook_token:', req.body?.webhook_token)
+  if (signature !== process.env.KIWIFY_WEBHOOK_TOKEN) {
+    console.error('Signature inválida. Recebida:', signature)
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
   const body = req.body
 
-  // LOG COMPLETO — consulte os logs da Vercel após o primeiro teste real
-  // para identificar os campos corretos do payload da Kiwify
-  console.log('=== KIWIFY WEBHOOK PAYLOAD ===')
-  console.log(JSON.stringify(body, null, 2))
-  console.log('==============================')
-
-  // Extrair campos — tentamos múltiplos caminhos pois o formato pode variar
+  // TAREFA 3: usar webhook_event_type para identificar o evento
   const event =
+    body?.webhook_event_type ||
     body?.order_status ||
     body?.event ||
     body?.status ||
-    body?.type ||
     ''
 
+  // Email do comprador
   const email =
     body?.Customer?.email ||
     body?.customer?.email ||
@@ -56,11 +50,12 @@ export default async function handler(req, res) {
     body?.email ||
     ''
 
+  // Nome/ID do produto
   const productName =
     body?.Product?.name ||
     body?.product?.name ||
+    body?.Product?.product_id ||
     body?.product_name ||
-    body?.order?.product?.name ||
     ''
 
   console.log('Evento:', event, '| Email:', email, '| Produto:', productName)
@@ -79,13 +74,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ received: true, ignored: true, event })
   }
 
-  // Mapear nome do produto para chave interna
   const productKey = PRODUCT_MAP[productName] || 'abdomen_plano'
   const active = isApproved
 
   console.log(`Upsert: email=${email} | produto=${productKey} | active=${active}`)
 
-  // Upsert no Supabase via REST API
   const supabaseUrl = process.env.SUPABASE_URL
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
