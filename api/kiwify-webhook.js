@@ -15,6 +15,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
+  // === DEBUG TEMPORÁRIO — remover após resolver validação ===
+  console.log('DEBUG headers:', JSON.stringify(req.headers))
+  console.log('DEBUG body:', JSON.stringify(req.body))
+  console.log('DEBUG query:', JSON.stringify(req.query))
+  console.log('DEBUG token env carregado:', !!process.env.KIWIFY_WEBHOOK_TOKEN)
+  // ==========================================================
+
   // Validar token (Kiwify envia via query param ou campo no body)
   const token =
     req.query.token ||
@@ -22,7 +29,7 @@ export default async function handler(req, res) {
     req.body?.webhook_token
 
   if (token !== process.env.KIWIFY_WEBHOOK_TOKEN) {
-    console.error('Webhook token inválido:', token)
+    console.error('Webhook token inválido. Recebido de query:', req.query.token, '| header x-kiwify-token:', req.headers['x-kiwify-token'], '| body.webhook_token:', req.body?.webhook_token)
     return res.status(401).json({ error: 'Unauthorized' })
   }
 
