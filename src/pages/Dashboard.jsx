@@ -224,13 +224,12 @@ export default function Dashboard() {
             ) : (
               // Oferta de compra
               <div className="bg-white rounded-2xl border border-pale-rose shadow-sm overflow-hidden">
-                <div
-                  className="h-32 bg-gradient-to-br from-dusty-rose/30 to-terracota/20 flex items-center justify-center relative"
-                  style={COLAGENO_OFFER.image ? { backgroundImage: `url(${COLAGENO_OFFER.image})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}
-                >
-                  {COLAGENO_OFFER.image && <div className="absolute inset-0 bg-warm-brown/30" />}
-                  {!COLAGENO_OFFER.image && <span className="text-4xl">✨</span>}
-                  <span className="relative z-10 text-xs bg-terracota text-white px-3 py-1 rounded-full font-medium">
+                <div className="relative flex items-center justify-center bg-beige overflow-hidden">
+                  {COLAGENO_OFFER.image
+                    ? <img src={COLAGENO_OFFER.image} alt={COLAGENO_OFFER.name} className="w-full object-contain" />
+                    : <div className="h-32 w-full flex items-center justify-center"><span className="text-4xl">✨</span></div>
+                  }
+                  <span className="absolute top-3 right-3 text-xs bg-terracota text-white px-3 py-1 rounded-full font-medium shadow">
                     {COLAGENO_OFFER.tag || 'Edición Especial'}
                   </span>
                 </div>
